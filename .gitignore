@@ -1,21 +1,43 @@
-venv
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
 venv/
-miniconda/
-miniconda
-*.db
-flat.txt
-flatten_files_for_gpt.py
-flatten_all_files_for_gpt.py
+env/
+ENV/
+
+# IDE
+.idea/
 .vscode/
-.vs
-.vs/
-.vs/*
-vscode
+*.swp
+*.swo
+
+# Environment Variables
 .env
-app/__pycache__
-app/__pycache__/*
-data
-data/*
-db/
-db/*
-stop_venv.bat
+.env.local
+
+# Logs
+*.log
+
+# System Files
+.DS_Store
+Thumbs.db
