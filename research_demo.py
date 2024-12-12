@@ -132,6 +132,13 @@ def demonstrate_research_capabilities():
         if st.session_state.research_stage == 'expand_sources':
             st.warning("⚠️ Expansion des sources (2ème round)")
             
+            # Initialize research_results if not exists
+            if not hasattr(st.session_state, 'research_results'):
+                st.session_state.research_results = {
+                    'sources': {'web': [], 'youtube': [], 'academic': []},
+                    'total_sources': 0
+                }
+            
             # Simuler l'expansion des sources
             additional_results = researcher.preliminary_research(
                 topic, 
@@ -139,26 +146,42 @@ def demonstrate_research_capabilities():
                 research_rounds=2
             )
             
+            # Ensure additional_results has the expected structure
+            if additional_results is None:
+                additional_results = {
+                    'sources': {'web': [], 'youtube': [], 'academic': []},
+                    'total_sources': 0
+                }
+            
             # Fusionner les résultats
-            for source_type in ['web', 'youtube', 'academic']:
-                st.session_state.research_results['sources'][source_type].extend(
-                    [src for src in additional_results['sources'][source_type] 
-                     if src not in st.session_state.research_results['sources'][source_type]]
-                )
+            if (isinstance(additional_results, dict) and 'sources' in additional_results and 
+                isinstance(st.session_state.research_results, dict) and 'sources' in st.session_state.research_results):
+                for source_type in ['web', 'youtube', 'academic']:
+                    if (source_type in additional_results['sources'] and 
+                        source_type in st.session_state.research_results['sources']):
+                        st.session_state.research_results['sources'][source_type].extend(
+                            [src for src in additional_results['sources'][source_type] 
+                             if src not in st.session_state.research_results['sources'][source_type]]
+                        )
             
             # Mettre à jour le nombre total de sources
-            st.session_state.research_results['total_sources'] += additional_results['total_sources']
+            if (isinstance(additional_results, dict) and 'total_sources' in additional_results and 
+                isinstance(st.session_state.research_results, dict) and 'total_sources' in st.session_state.research_results):
+                st.session_state.research_results['total_sources'] += additional_results['total_sources']
             
             # Réafficher les sources mises à jour
-            st.write(f"**Nombre Total de Sources :** {st.session_state.research_results['total_sources']}")
+            if isinstance(st.session_state.research_results, dict) and 'total_sources' in st.session_state.research_results:
+                st.write(f"**Nombre Total de Sources :** {st.session_state.research_results['total_sources']}")
             
             # Réafficher les sources
-            st.markdown("#### 🔄 Sources Mises à Jour")
-            for source_type in ['web', 'youtube', 'academic']:
-                st.markdown(f"**{source_type.capitalize()} Sources :**")
-                for source in st.session_state.research_results['sources'][source_type]:
-                    st.markdown(f"- {'🌐' if source_type == 'web' else '📺' if source_type == 'youtube' else '📚'} {source}")
-            
+            if isinstance(st.session_state.research_results, dict) and 'sources' in st.session_state.research_results:
+                st.markdown("#### 🔄 Sources Mises à Jour")
+                for source_type in ['web', 'youtube', 'academic']:
+                    if source_type in st.session_state.research_results['sources']:
+                        st.markdown(f"**{source_type.capitalize()} Sources :**")
+                        for source in st.session_state.research_results['sources'][source_type]:
+                            st.write(f"- {source}")
+
             # Bouton de retour à la recherche préliminaire
             if st.button("🔙 Retour à la Recherche Préliminaire"):
                 st.session_state.research_stage = 'preliminary_search'
