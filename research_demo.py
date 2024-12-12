@@ -13,7 +13,7 @@ sys.path.append(str(agents_path))
 
 # Import the research agent
 try:
-    from researcher import ResearcherAgent
+    from agents.researcher import ResearcherAgent
 except ImportError as e:
     st.error(f"Error importing ResearcherAgent: {str(e)}")
     st.error("Please check that the agents/researcher.py file exists.")
