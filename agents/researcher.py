@@ -1,16 +1,15 @@
 import os
 from dotenv import load_dotenv
-import openai
+from transformers import AutoModelForCausalLM, AutoTokenizer
 
 # Load environment variables
 load_dotenv()
 
 class ResearcherAgent:
     def __init__(self):
-        self.api_key = os.environ.get('OPENAI_API_KEY')
-        if not self.api_key:
-            raise ValueError("OPENAI_API_KEY not found in environment variables")
-        openai.api_key = self.api_key
+        self.api_key = os.environ.get('OPENAI_API_KEY')  # Keep this for compatibility
+        self.tokenizer = AutoTokenizer.from_pretrained('meta-llama/Llama-3-3')
+        self.model = AutoModelForCausalLM.from_pretrained('meta-llama/Llama-3-3')
 
     def search_web(self, topic):
         # Placeholder for web search logic
@@ -25,16 +24,9 @@ class ResearcherAgent:
         return f"Compiled document with web and YouTube results for {web_results} and {youtube_results}."
 
     def summarize_key_points(self, compiled_document):
-        # Use OpenAI API to summarize the document
-        try:
-            response = openai.Completion.create(
-                engine="text-davinci-003",
-                prompt=f"Summarize the following document: {compiled_document}",
-                max_tokens=150
-            )
-            return response.choices[0].text.strip()
-        except Exception as e:
-            return f"Error summarizing document: {str(e)}"
+        inputs = self.tokenizer(compiled_document, return_tensors='pt')
+        outputs = self.model.generate(**inputs)
+        return self.tokenizer.decode(outputs[0], skip_special_tokens=True)
 
     def perform_research(self, topic):
         try:
