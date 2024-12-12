@@ -5,16 +5,20 @@ from pathlib import Path
 
 # Get the absolute path of the current file
 current_path = Path(__file__).parent.absolute()
+app_path = current_path / 'app'
 
 # Add the project paths
 sys.path.append(str(current_path))
-sys.path.append(str(current_path / 'app'))
+sys.path.append(str(app_path))
 
 # Import the research agent
 try:
-    from app.my_agent import ResearcherAgent
-except ImportError:
-    st.error("Error: Could not import ResearcherAgent. Check the project structure.")
+    from app.my_agent import ResearchAgent
+    from app.my_tools import MySearchTools
+    from app.llms import get_openai_llm
+except ImportError as e:
+    st.error(f"Error importing modules: {str(e)}")
+    st.error("Please check that all required files are in the correct location.")
     st.stop()
 
 def demonstrate_research_capabilities():
@@ -79,7 +83,7 @@ def demonstrate_research_capabilities():
     
     if topic:
         # Create the research agent
-        researcher = ResearcherAgent()
+        researcher = ResearchAgent()
         
         # Demo button
         if st.session_state.research_stage == 'initial':
