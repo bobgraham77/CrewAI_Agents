@@ -80,8 +80,17 @@ def demonstrate_research_capabilities():
     st.session_state.topic = topic
     
     if topic:
+        # Model selection dropdown
+        model_choice = st.selectbox(
+            'Choose a model:',
+            ['OpenAI', 'LLaMA 3.3']
+        )
+
         # Create the research agent
-        researcher = ResearcherAgent()
+        if model_choice == 'OpenAI':
+            researcher = ResearcherAgent(openai=True)
+        else:
+            researcher = ResearcherAgent(openai=False)
         
         # Demo button
         if st.session_state.research_stage == 'initial':
