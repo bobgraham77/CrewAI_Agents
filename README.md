@@ -1,49 +1,54 @@
-# Agent de Recherche AI - Démonstration Avancée 🕵️‍♂️
+# AI Research Agent - Advanced Demo 🕵️‍♂️
 
 ## Description
-Une application Streamlit qui démontre les capacités d'un agent de recherche AI utilisant CrewAI. L'agent peut effectuer des recherches approfondies sur divers sujets en utilisant des sources multiples et en fournissant des analyses détaillées.
+A Streamlit application demonstrating the capabilities of an AI research agent using CrewAI. The agent can conduct in-depth research on various topics using multiple sources and providing detailed analyses.
 
-## Fonctionnalités
-- 🔍 Recherche intelligente multi-sources
-- 📊 Analyse et filtrage automatique des sources
-- 🤖 Utilisation de l'IA pour la synthèse d'informations
-- 📈 Expansion dynamique des sources de recherche
+## Features
+- 🔍 Intelligent multi-source search
+- 📊 Automatic source analysis and filtering
+- 🤖 AI-powered information synthesis
+- 📈 Dynamic research source expansion
 
 ## Installation
 
-1. Cloner le dépôt :
+1. Clone the repository:
 ```bash
 git clone https://github.com/bobgraham77/CrewAI_Agents.git
 cd CrewAI_Agents
 ```
 
-2. Installer les dépendances :
+2. Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Configuration :
-- Créez un fichier `.env` à la racine du projet
-- Ajoutez votre clé API OpenAI :
+3. Configuration:
+- Create a `.env` file in the project root
+- Add your API keys:
 ```
-OPENAI_API_KEY=votre_clé_api
+GOOGLE_API_KEY=your_google_api_key
+GOOGLE_CSE_ID=your_google_cse_id
 ```
 
-## Utilisation
-Pour lancer l'application localement :
+## Usage
+To run the application locally:
 ```bash
 streamlit run research_demo.py
 ```
 
-## Déploiement
-L'application est déployée sur Streamlit Share et accessible à l'adresse :
-[URL de l'application]
+## Deployment
+The application can be deployed on Streamlit Share:
+1. Fork this repository
+2. Visit https://share.streamlit.io/
+3. Deploy using your forked repository
+4. Add the required environment variables in the Streamlit Share settings
 
-## Structure du Projet
+## Project Structure
 ```
 CrewAI-Studio/
 ├── app/
 │   ├── __init__.py
+│   ├── my_tools.py
 │   └── my_agent.py
 ├── research_demo.py
 ├── requirements.txt
@@ -51,8 +56,8 @@ CrewAI-Studio/
 └── .gitignore
 ```
 
-## Contribution
-Les contributions sont les bienvenues ! N'hésitez pas à ouvrir une issue ou à proposer une pull request.
+## License
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-## Licence
-MIT
+## Contributing
+Contributions are welcome! Please feel free to submit a Pull Request.

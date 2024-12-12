@@ -2,16 +2,16 @@ import streamlit as st
 import sys
 import os
 
-# Ajouter le chemin du projet au path
+# Add the project path to the path
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(project_root)
 sys.path.append(os.path.join(project_root, 'CrewAI-Studio'))
 
-# Importer l'agent de recherche
+# Import the research agent
 from app.my_agent import ResearcherAgent
 
 def demonstrate_research_capabilities():
-    # Initialiser l'état de la session si nécessaire
+    # Initialize the session state if necessary
     if 'research_results' not in st.session_state:
         st.session_state.research_results = None
     if 'topic' not in st.session_state:
@@ -21,116 +21,116 @@ def demonstrate_research_capabilities():
     if 'research_stage' not in st.session_state:
         st.session_state.research_stage = 'initial'
 
-    st.title("🕵️ Agent de Recherche AI - Démonstration Avancée")
+    st.title("🕵️ AI Research Agent - Advanced Demo")
     
-    # Vérifier la présence de la clé API OpenAI
+    # Check for the presence of the OpenAI API key
     if 'OPENAI_API_KEY' not in os.environ or not os.environ['OPENAI_API_KEY']:
-        st.warning("⚠️ Clé API OpenAI non configurée. Certaines fonctionnalités seront limitées.")
-        st.info("🔑 Vous pouvez obtenir une clé API sur https://platform.openai.com/account/api-keys")
+        st.warning("⚠️ OpenAI API key not configured. Some features will be limited.")
+        st.info("🔑 You can obtain an API key at https://platform.openai.com/account/api-keys")
         
-        # Demander la clé API à l'utilisateur
+        # Ask the user for the API key
         openai_api_key = st.text_input(
-            "Veuillez entrer votre clé API OpenAI", 
+            "Please enter your OpenAI API key", 
             type="password",
-            help="La clé API est nécessaire pour utiliser les fonctionnalités avancées de recherche"
+            help="The API key is required to use advanced research features"
         )
         
         if openai_api_key:
             os.environ['OPENAI_API_KEY'] = openai_api_key
         else:
-            st.warning("Mode démo limité sans clé API OpenAI")
+            st.warning("Demo mode limited without OpenAI API key")
     
-    # Section d'explication des capacités
+    # Section explaining the capabilities
     st.markdown("""
-    ## 🔍 Capacités de l'Agent de Recherche
+    ## 🔍 Capabilities of the Research Agent
     
-    Cet agent utilise des techniques avancées de recherche et de sélection de sources :
+    This agent uses advanced research and source selection techniques:
     
-    1. 🌐 **Sélection Intelligente des Sources**
-       - Filtre automatiquement les sources de qualité
-       - Évite les sources peu fiables (Wikipedia, blogs personnels)
-       - Priorise les sources académiques et professionnelles
+    1. 🌐 **Intelligent Source Selection**
+       - Automatically filters out low-quality sources
+       - Avoids unreliable sources (Wikipedia, personal blogs)
+       - Prioritizes academic and professional sources
     
-    2. 🔢 **Gestion Limitée des Sources**
-       - Maximum 15 sources par round de recherche
-       - Contrôle de l'expansion des sources
-       - Prévention de la surcharge d'informations
+    2. 🔢 **Limited Source Management**
+       - Maximum 15 sources per round of research
+       - Controls source expansion
+       - Prevents information overload
     
-    3. 🧠 **Critères de Sélection Avancés**
-       - Longueur de la description
-       - Pertinence du contenu
-       - Diversité des sources
+    3. 🧠 **Advanced Selection Criteria**
+       - Description length
+       - Content relevance
+       - Source diversity
     """)
     
-    # Sélection du sujet de recherche
-    topic = st.text_input("🔬 Entrez un sujet de recherche", 
+    # Select the research topic
+    topic = st.text_input("🔬 Enter a research topic", 
                           value=st.session_state.topic or "",
-                          placeholder="Ex: Intelligence Artificielle, Changement Climatique, ...")
+                          placeholder="Ex: Artificial Intelligence, Climate Change, ...")
     
-    # Mettre à jour le topic dans la session
+    # Update the topic in the session
     st.session_state.topic = topic
     
     if topic:
-        # Créer l'agent de recherche
+        # Create the research agent
         researcher = ResearcherAgent()
         
-        # Bouton de démonstration
+        # Demo button
         if st.session_state.research_stage == 'initial':
-            if st.button("🚀 Lancer la Recherche Démonstrative"):
+            if st.button("🚀 Launch Demo Research"):
                 st.session_state.research_stage = 'preliminary_search'
                 st.rerun()
         
-        # Étape de recherche préliminaire
+        # Preliminary research step
         if st.session_state.research_stage == 'preliminary_search':
-            st.subheader("🔍 Processus de Recherche Détaillé")
+            st.subheader("🔍 Detailed Research Process")
             
-            # Étape 1 : Recherche Préliminaire
-            st.markdown("#### 📋 Étape 1 : Découverte Préliminaire des Sources")
+            # Step 1: Preliminary Source Discovery
+            st.markdown("#### 📋 Step 1: Preliminary Source Discovery")
             preliminary_results = researcher.preliminary_research(topic)
             
-            # Stocker les résultats dans la session
+            # Store the results in the session
             st.session_state.research_results = preliminary_results
             
-            # Afficher les détails de la découverte des sources
-            st.write(f"**Nombre Total de Sources :** {preliminary_results['total_sources']}")
+            # Display the source discovery details
+            st.write(f"**Total Sources:** {preliminary_results['total_sources']}")
             
-            # Démonstration des critères de sélection
-            st.markdown("#### 🕵️ Critères de Sélection des Sources")
+            # Demonstrate the selection criteria
+            st.markdown("#### 🕵️ Source Selection Criteria")
             
-            # Sources Web
-            st.markdown("**Sources Web Sélectionnées :**")
+            # Web sources
+            st.markdown("**Selected Web Sources:**")
             for source in preliminary_results['sources']['web']:
                 st.markdown(f"- 🌐 {source}")
                 
-            # Sources YouTube
-            st.markdown("**Sources YouTube Sélectionnées :**")
+            # YouTube sources
+            st.markdown("**Selected YouTube Sources:**")
             for source in preliminary_results['sources']['youtube']:
                 st.markdown(f"- 📺 {source}")
             
-            # Sources Académiques
-            st.markdown("**Sources Académiques Sélectionnées :**")
+            # Academic sources
+            st.markdown("**Selected Academic Sources:**")
             for source in preliminary_results['sources']['academic']:
                 st.markdown(f"- 📚 {source}")
             
-            # Démonstration de l'expansion des sources
-            st.markdown("#### 🔄 Démonstration de l'Expansion des Sources")
+            # Demonstrate source expansion
+            st.markdown("#### 🔄 Source Expansion Demonstration")
             
-            # Checkbox pour l'expansion
-            expand_sources = st.checkbox("Voulez-vous plus de sources ?")
+            # Checkbox for source expansion
+            expand_sources = st.checkbox("Do you want more sources?")
             
             if expand_sources:
                 st.session_state.expand_sources = True
                 st.session_state.research_stage = 'expand_sources'
                 st.rerun()
             
-            # Bouton de recherche finale
-            if st.button("🔬 Lancer la Recherche Approfondie"):
+            # Button for final research
+            if st.button("🔬 Launch In-Depth Research"):
                 st.session_state.research_stage = 'deep_research'
                 st.rerun()
         
-        # Étape d'expansion des sources
+        # Source expansion step
         if st.session_state.research_stage == 'expand_sources':
-            st.warning("⚠️ Expansion des sources (2ème round)")
+            st.warning("⚠️ Expanding sources (2nd round)")
             
             # Initialize research_results if not exists
             if not hasattr(st.session_state, 'research_results'):
@@ -139,10 +139,10 @@ def demonstrate_research_capabilities():
                     'total_sources': 0
                 }
             
-            # Simuler l'expansion des sources
+            # Simulate source expansion
             additional_results = researcher.preliminary_research(
                 topic, 
-                max_total_sources=15,  # 15 sources supplémentaires
+                max_total_sources=15,  # 15 additional sources
                 research_rounds=2
             )
             
@@ -153,7 +153,7 @@ def demonstrate_research_capabilities():
                     'total_sources': 0
                 }
             
-            # Fusionner les résultats
+            # Merge results
             if (isinstance(additional_results, dict) and 'sources' in additional_results and 
                 isinstance(st.session_state.research_results, dict) and 'sources' in st.session_state.research_results):
                 for source_type in ['web', 'youtube', 'academic']:
@@ -164,46 +164,46 @@ def demonstrate_research_capabilities():
                              if src not in st.session_state.research_results['sources'][source_type]]
                         )
             
-            # Mettre à jour le nombre total de sources
+            # Update total sources count
             if (isinstance(additional_results, dict) and 'total_sources' in additional_results and 
                 isinstance(st.session_state.research_results, dict) and 'total_sources' in st.session_state.research_results):
                 st.session_state.research_results['total_sources'] += additional_results['total_sources']
             
-            # Réafficher les sources mises à jour
+            # Display updated total sources
             if isinstance(st.session_state.research_results, dict) and 'total_sources' in st.session_state.research_results:
-                st.write(f"**Nombre Total de Sources :** {st.session_state.research_results['total_sources']}")
+                st.write(f"**Total Sources:** {st.session_state.research_results['total_sources']}")
             
-            # Réafficher les sources
+            # Display sources
             if isinstance(st.session_state.research_results, dict) and 'sources' in st.session_state.research_results:
-                st.markdown("#### 🔄 Sources Mises à Jour")
+                st.markdown("#### 🔄 Updated Sources")
                 for source_type in ['web', 'youtube', 'academic']:
                     if source_type in st.session_state.research_results['sources']:
-                        st.markdown(f"**{source_type.capitalize()} Sources :**")
+                        st.markdown(f"**{source_type.capitalize()} Sources:**")
                         for source in st.session_state.research_results['sources'][source_type]:
                             st.write(f"- {source}")
 
-            # Bouton de retour à la recherche préliminaire
-            if st.button("🔙 Retour à la Recherche Préliminaire"):
+            # Button to return to preliminary research
+            if st.button("🔙 Return to Preliminary Research"):
                 st.session_state.research_stage = 'preliminary_search'
                 st.rerun()
             
-            # Bouton de recherche finale
-            if st.button("🔬 Lancer la Recherche Approfondie"):
+            # Button for final research
+            if st.button("🔬 Launch In-Depth Research"):
                 st.session_state.research_stage = 'deep_research'
                 st.rerun()
         
-        # Étape de recherche approfondie
+        # In-depth research step
         if st.session_state.research_stage == 'deep_research':
-            # Effectuer la recherche complète
-            with st.spinner("Analyse approfondie en cours..."):
+            # Perform the in-depth research
+            with st.spinner("In-depth analysis in progress..."):
                 research_result = researcher.research_topic(topic)
             
-            # Afficher les résultats
-            st.subheader("📄 Résultats de la Recherche")
+            # Display the results
+            st.subheader("📄 Research Results")
             st.write(research_result)
             
-            # Bouton de réinitialisation
-            if st.button("🔁 Nouvelle Recherche"):
+            # Button to reset
+            if st.button("🔁 New Research"):
                 st.session_state.research_stage = 'initial'
                 st.session_state.research_results = None
                 st.session_state.topic = None
