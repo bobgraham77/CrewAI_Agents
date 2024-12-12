@@ -1,14 +1,21 @@
 import streamlit as st
 import sys
 import os
+from pathlib import Path
 
-# Add the project path to the path
-project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(project_root)
-sys.path.append(os.path.join(project_root, 'CrewAI-Studio'))
+# Get the absolute path of the current file
+current_path = Path(__file__).parent.absolute()
+
+# Add the project paths
+sys.path.append(str(current_path))
+sys.path.append(str(current_path / 'app'))
 
 # Import the research agent
-from app.my_agent import ResearcherAgent
+try:
+    from app.my_agent import ResearcherAgent
+except ImportError:
+    st.error("Error: Could not import ResearcherAgent. Check the project structure.")
+    st.stop()
 
 def demonstrate_research_capabilities():
     # Initialize the session state if necessary
